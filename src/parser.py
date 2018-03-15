@@ -14,7 +14,7 @@ class Parse():
         self.lineFareSearch = r'(fare \(.*\))(.*)\$([0-9]+.[0-9]+)'
         self.discountSearch = r'(Discount)(.*)\$([0-9]+.[0-9]+)'
 
-    def searchForFare(self, searchString):
+    def __searchForFare__(self, searchString):
         '''
             Search for the fare string in the message body:
             Line fare
@@ -31,8 +31,8 @@ class Parse():
         '''
             Calculate the total fare owed at the end of the ride
         '''
-        lineFare = self.searchForFare(self.lineFareSearch)
-        discount = self.searchForFare(self.discountSearch)
+        lineFare = self.__searchForFare__(self.lineFareSearch)
+        discount = self.__searchForFare__(self.discountSearch)
         if lineFare and discount is None:
             return Decimal(lineFare)
         elif lineFare and discount:
