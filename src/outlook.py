@@ -14,6 +14,7 @@ mapi = outlook.GetNamespace("MAPI")
 
 # Make this configurable through CLI options
 LYFT_FOLDER_NAME = "Lyft Ride"
+OUTLOOK_DOMAIN = "joakes@silasg.com"
 
 class Oli():
     '''
@@ -30,16 +31,6 @@ class Oli():
 
     def prop(self):
         return sorted( self._obj._prop_map_get_.keys() )
-
-def getLyftFolderIndex():
-    '''
-        Iterate over all Outlook folders (top level)
-        and find the Lyft Ride index
-    '''
-    for inx, folder in Oli(mapi.Folders).items(): # Corresponds to user name in outlook (e.g. joakes@example.com)
-        for inx, subfolder in Oli(folder.Folders).items(): # Grab actual top-level folders for user
-            if (subfolder.Name == LYFT_FOLDER_NAME):
-                return inx
 
 def getLyftSubFolder(lyftFolders, month = None):
     '''
@@ -87,11 +78,9 @@ def readMessages(monthlySubFolder):
     return messageBodies
 
 def messageBodies():
-    lyftFolderIndex = getLyftFolderIndex()
-
-    topLevelFolder = mapi.Folders[1] # Retrieve the main outlook folder
+    topLevelFolder = mapi.Folders[OUTLOOK_DOMAIN] # Retrieve the main outlook folder
     
-    lyftRideInbox = topLevelFolder.Folders[lyftFolderIndex] # Retrieve the folder corresponding to the 
+    lyftRideInbox = topLevelFolder.Folders[LYFT_FOLDER_NAME] # Retrieve the folder corresponding to the 
 
     monthlySubFolder = getLyftSubFolder(lyftRideInbox)
 
