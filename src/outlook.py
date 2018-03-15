@@ -5,12 +5,14 @@
 
 import win32com.client
 import win_unicode_console
+import sys
 
 win_unicode_console.enable() # NOTE: There's a bug related to stdout streams that errors out the program
 
 outlook = win32com.client.Dispatch("Outlook.Application")
 mapi = outlook.GetNamespace("MAPI")
 
+# Make this configurable through CLI options
 LYFT_FOLDER_NAME = "Lyft Ride"
 
 class Oli():
@@ -36,23 +38,21 @@ def getLyftFolderIndex():
     '''
     for inx, folder in Oli(mapi.Folders).items(): # Corresponds to user name in outlook (e.g. joakes@example.com)
         for inx, subfolder in Oli(folder.Folders).items(): # Grab actual top-level folders for user
-            print("(%i) " % inx + "" + folder.Name + " => " + subfolder.Name)
             if (subfolder.Name == LYFT_FOLDER_NAME):
-                print("Index (%i) " % inx + " for " + subfolder.Name)
                 return inx
 
-def getLyftSubFolder(lyftFolders):
+def getLyftSubFolder(lyftFolders, month = None):
     '''
         Iterate over Lyft's monthly subfolders
         to find the month we need to report from
     '''
-    month = getMonthToReport()
 
-    print("Retrieving " + str(lyftFolders) + " subfolder for %s" % month)
+    if month is None:
+        month = getMonthToReport()
 
     for inx, subfolder in Oli(lyftFolders.Folders).items():
+        print(subfolder.Name)
         if (subfolder.Name == month):
-            print("Found (%s) " % month)
             return subfolder
 
 
@@ -71,8 +71,8 @@ def readMessages(monthlySubFolder):
     '''
 
     messages = monthlySubFolder.Items
-    message = messages.GetNext()
-    
+    message = messages.GetFirst()
+
     totalMessagesRead = 1 # Keep track of the number of messages read for verification
 
     messageBodies = []
