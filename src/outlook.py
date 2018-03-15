@@ -42,7 +42,7 @@ def getLyftSubFolder(lyftFolders, month = None):
         month = getMonthToReport()
 
     for inx, subfolder in Oli(lyftFolders.Folders).items():
-        print(subfolder.Name)
+        print("(%i) " % inx + " => " + subfolder.Name)
         if (subfolder.Name == month):
             return subfolder
 
