@@ -67,6 +67,7 @@ def getMonthToReport():
 def readMessages(monthlySubFolder):
     '''
         Read the messages for the respective month to report
+        and return an array of their string bodies
     '''
 
     messages = monthlySubFolder.Items
@@ -74,17 +75,18 @@ def readMessages(monthlySubFolder):
     
     totalMessagesRead = 1 # Keep track of the number of messages read for verification
 
-    print(message.Body)
+    messageBodies = []
 
-    # while message:
-    #     print(message.Body)
-    #     message = messages.GetNext()
-    #     totalMessagesRead += 1
+    while message:
+        messageBodies.append(message.Body)
+        message = messages.GetNext()
+        totalMessagesRead += 1
     
     print("Total messages found: %i" % totalMessagesRead)
 
+    return messageBodies
 
-def main():
+def messageBodies():
     lyftFolderIndex = getLyftFolderIndex()
 
     topLevelFolder = mapi.Folders[1] # Retrieve the main outlook folder
@@ -93,10 +95,9 @@ def main():
 
     monthlySubFolder = getLyftSubFolder(lyftRideInbox)
 
-    readMessages(monthlySubFolder)
-
+    return readMessages(monthlySubFolder)
 
 if __name__ == "__main__":
-    main()
+    messageBodies()
 
 
