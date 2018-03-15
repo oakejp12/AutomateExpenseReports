@@ -77,10 +77,9 @@ def readMessages(monthlySubFolder):
 
     return messageBodies
 
-def messageBodies():
-    topLevelFolder = mapi.Folders[OUTLOOK_DOMAIN] # Retrieve the main outlook folder
-    
-    lyftRideInbox = topLevelFolder.Folders[LYFT_FOLDER_NAME] # Retrieve the folder corresponding to the 
+def messageBodies():    
+    # Retrieve the folder corresponding to the Lyft Ride inbox
+    lyftRideInbox = mapi.Folders[OUTLOOK_DOMAIN].Folders[LYFT_FOLDER_NAME]
 
     monthlySubFolder = getLyftSubFolder(lyftRideInbox)
 
