@@ -41,7 +41,7 @@ class Parse():
             print("Couldn't retrieve values...")
 
 
-def parseMessages():
+def getTotalExpenses():
     bodies = messageBodies()
 
     totalsForEachMessage = [Parse(n).getLineTotal() for n in bodies]
@@ -50,8 +50,10 @@ def parseMessages():
 
     print("Total " + str(sum(totalsForEachMessage)))
 
+    return sum(totalsForEachMessage)
+
 
 if __name__ == "__main__":
-    parseMessages()
+    getTotalExpenses()
 
     
