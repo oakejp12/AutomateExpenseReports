@@ -5,17 +5,13 @@
 
 import win32com.client
 import win_unicode_console
-import sys
+import cli
 
 win_unicode_console.enable() # NOTE: There's a bug related to stdout streams that errors out the program
 
 outlook = win32com.client.Dispatch("Outlook.Application")
 mapi = outlook.GetNamespace("MAPI")
-
-# Make this configurable through CLI options
-LYFT_FOLDER_NAME = "Lyft Ride"
-OUTLOOK_DOMAIN = "joakes@silasg.com"
-
+    
 class Oli():
     '''
         Helper class to iterate over Outlook objects
@@ -32,7 +28,7 @@ class Oli():
     def prop(self):
         return sorted( self._obj._prop_map_get_.keys() )
 
-def getLyftSubFolder(lyftFolders, month = None):
+def getLyftSubFolder(folder, month = None):
     '''
         Iterate over Lyft's monthly subfolders
         to find the month we need to report from
@@ -78,10 +74,16 @@ def readMessages(monthlySubFolder):
     return messageBodies
 
 def messageBodies():    
+    args = cli.Arguments() 
+
+    OUTLOOK_DOMAIN = args.getOutlookDomain()
+    LYFT_FOLDER_NAME = args.getFolderName()
+    MONTH = args.getMonth()
+
     # Retrieve the folder corresponding to the Lyft Ride inbox
     lyftRideInbox = mapi.Folders[OUTLOOK_DOMAIN].Folders[LYFT_FOLDER_NAME]
 
-    monthlySubFolder = getLyftSubFolder(lyftRideInbox)
+    monthlySubFolder = getLyftSubFolder(lyftRideInbox, MONTH)
 
     return readMessages(monthlySubFolder)
 
