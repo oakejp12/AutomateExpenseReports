@@ -11,8 +11,7 @@ class Parse():
     
     def __init__(self, body):
         self.body = body
-        self.lineFareSearch = r'(fare \(.*\))(.*)\$([0-9]+.[0-9]+)'
-        self.discountSearch = r'(Discount)(.*)\$([0-9]+.[0-9]+)'
+        self.visaSearch     = r'(Visa \*[0-9]+)(.*)\$([0-9]+.[0-9]+)'
 
     def __searchForFare__(self, searchString):
         '''
@@ -26,32 +25,33 @@ class Parse():
             return lineFare
         else:
             print("No fare found: " + searchString) # TODO: Throw an error here? Maybe not since discounts won't be found
+            #print(self.body)
     
-    def getLineTotal(self):
+    def getFareTotal(self):
         '''
-            Calculate the total fare owed at the end of the ride
+            Calculate the total fare owed at the end of a ride
         '''
-        lineFare = self.__searchForFare__(self.lineFareSearch)
-        discount = self.__searchForFare__(self.discountSearch)
-        if lineFare and discount is None:
-            return Decimal(lineFare)
-        elif lineFare and discount:
-            return Decimal(lineFare) - Decimal(discount)
+        totalFare = self.__searchForFare__(self.visaSearch)
+        if totalFare:
+            return Decimal(totalFare)
         else:
             print("Couldn't retrieve values...")
 
-
 def getTotalExpenses():
+    '''
+        Retrieve the total spent from each ride for a month
+        This is stored in the body of the email
+    '''
+
     bodies = messageBodies()
 
-    totalsForEachMessage = [Parse(n).getLineTotal() for n in bodies]
+    totalsForEachMessage = [Parse(n).getFareTotal() for n in bodies]
 
     [print(str(total)) for total in totalsForEachMessage]
 
     print("Total " + str(sum(totalsForEachMessage)))
 
     return sum(totalsForEachMessage)
-
 
 if __name__ == "__main__":
     getTotalExpenses()
