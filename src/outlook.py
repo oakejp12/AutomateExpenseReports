@@ -22,7 +22,7 @@ class Oli():
 
     def items(self):
         array_size = self._obj.Count
-        for item_index in range(1, array_size):
+        for item_index in range(array_size):
             yield (item_index, self._obj[item_index])
 
     def prop(self):
@@ -37,8 +37,9 @@ def getLyftSubFolder(folder, month = None):
     if month is None:
         month = getMonthToReport()
 
-    for inx, subfolder in Oli(lyftFolders.Folders).items():
-        print("(%i) " % inx + " => " + subfolder.Name)
+    print('Retrieving receipts for %s.' % month)
+
+    for _, subfolder in Oli(folder.Folders).items():
         if (subfolder.Name == month):
             return subfolder
 
@@ -60,7 +61,7 @@ def readMessages(monthlySubFolder):
     messages = monthlySubFolder.Items
     message = messages.GetFirst()
 
-    totalMessagesRead = 1 # Keep track of the number of messages read for verification
+    totalMessagesRead = 0 # Keep track of the number of messages read for verification
 
     messageBodies = []
 
